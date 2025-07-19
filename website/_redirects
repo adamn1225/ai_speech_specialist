@@ -1,0 +1,3 @@
+# Netlify redirects file
+# Redirect any 404s to the main page
+/*    /index.html   200
