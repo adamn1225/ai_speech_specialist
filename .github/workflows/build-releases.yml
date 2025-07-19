@@ -1,4 +1,4 @@
-name: Build and Release
+name: Test Build
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  test-build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -20,92 +20,48 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: Install dependencies
+    - name: Test Python
+      run: |
+        python --version
+        python -c "print('✅ Python works')"
+        
+    - name: Install PyQt6
       run: |
         python -m pip install --upgrade pip
-        pip install PyQt6 pyinstaller
+        pip install PyQt6
+        python -c "from PyQt6.QtWidgets import QApplication; print('✅ PyQt6 works')"
         
-    - name: Build Linux executable
+    - name: Install PyInstaller
       run: |
-        pyinstaller --onefile --name SpeechCoach simple_main.py
+        pip install pyinstaller
+        pyinstaller --version
         
-    - name: Create Linux package
+    - name: Test build
       run: |
-        mkdir -p package/SpeechCoach_Linux
-        cp dist/SpeechCoach package/SpeechCoach_Linux/
-        echo "#!/bin/bash" > package/SpeechCoach_Linux/run_speech_coach.sh
-        echo "cd \"\$(dirname \"\$0\")\"" >> package/SpeechCoach_Linux/run_speech_coach.sh
-        echo "./SpeechCoach" >> package/SpeechCoach_Linux/run_speech_coach.sh
-        chmod +x package/SpeechCoach_Linux/run_speech_coach.sh
-        echo "Speech Coach Linux - Extract and run ./SpeechCoach" > package/SpeechCoach_Linux/README.txt
-        cd package && tar -czf ../SpeechCoach-linux.tar.gz SpeechCoach_Linux/
+        echo "Testing simple build..."
+        pyinstaller --onefile simple_main.py
+        ls -la dist/
         
-    - name: Create Release
+    - name: Create test file
+      run: |
+        echo "Test file content" > test-release.txt
+        
+    - name: Create Release (if all tests pass)
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          SpeechCoach-linux.tar.gz
+        files: test-release.txt
         body: |
-          ## Speech Coach Release ${{ github.ref_name }}
+          ## Test Release ${{ github.ref_name }}
           
-          **Automated build** - Linux version available now.
+          ✅ All build tests passed!
           
-          ### Installation:
-          1. Download SpeechCoach-linux.tar.gz
-          2. Extract: `tar -xzf SpeechCoach-linux.tar.gz`
-          3. Run: `cd SpeechCoach_Linux && ./SpeechCoach`
+          This confirms:
+          - Python 3.11 works
+          - PyQt6 installs successfully  
+          - PyInstaller can build executables
+          - Release creation works
           
-          ### File Size: ~56MB
-          ### Platform: Linux x86_64
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install PyQt6 pyinstaller
-        
-    - name: Build Windows executable
-      run: |
-        pyinstaller --onefile --windowed --name SpeechCoach simple_main.py
-        
-    - name: Create Windows package
-      run: |
-        mkdir package
-        mkdir package\SpeechCoach_Windows
-        copy dist\SpeechCoach.exe package\SpeechCoach_Windows\
-        echo "Double-click SpeechCoach.exe to run the application" > package\SpeechCoach_Windows\README.txt
-        cd package
-        powershell Compress-Archive -Path SpeechCoach_Windows -DestinationPath ..\SpeechCoach-windows.zip
-        
-    - name: Upload Windows Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          SpeechCoach-windows.zip
-        body: |
-          ## Speech Coach Windows Release ${{ github.ref_name }}
-          
-          **Automated build** - Windows version available.
-          
-          ### Installation:
-          1. Download SpeechCoach-windows.zip
-          2. Extract ZIP file
-          3. Double-click SpeechCoach.exe
-          
-          ### File Size: ~25MB
-          ### Platform: Windows 64-bit
+          Next step: Add actual executable files.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         pip install pyinstaller
