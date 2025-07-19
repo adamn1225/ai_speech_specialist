@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Coach - Professional Communication Trainer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .hero { text-align: center; padding: 1rem 0; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; margin-bottom: 1rem; font-weight: 600; }
+        .download-section { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 3rem; margin:0; }
+        .downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem; }
+        .download-card { background: rgba(255,255,255,0.15); border-radius: 15px; padding: 2rem; text-align: center; transition: transform 0.3s; }
+        .download-card:hover { transform: translateY(-5px); }
+        .download-btn { display: inline-block; background: #4CAF50; color: white; padding: 1rem 2rem; border-radius: 50px; text-decoration: none; font-weight: bold; margin: 1rem 0; transition: background 0.3s; }
+        .download-btn:hover { background: #45a049; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+        .feature { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 2rem; text-align: center; }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎤 Speech Coach</h1>
+            <p>Professional Communication Trainer with Real-time Speech Analysis</p>
+            <p>Improve your speaking skills with AI-powered feedback and practice lessons</p>
+        </div>
+
+        <div class="download-section">
+            <h2>📥 Download Speech Coach - Free</h2>
+            <p>No installation required • Works offline • Privacy-first</p>
+            
+            <div class="downloads">
+                <div class="download-card">
+                    <h3>🪟 Windows</h3>
+                    <p>Windows 10/11 (64-bit)</p>
+                    <p><strong>163 MB</strong></p>
+                    <a href="https://github.com/yourusername/speech-coach/releases/latest/download/SpeechCoach-windows.zip" class="download-btn">
+                        Download for Windows
+                    </a>
+                    <p><small>Extract ZIP → Run SpeechCoach.exe</small></p>
+                </div>
+                
+                <div class="download-card">
+                    <h3>🐧 Linux</h3>
+                    <p>Ubuntu 20.04+ or equivalent</p>
+                    <p><strong>165 MB</strong></p>
+                    <a href="https://github.com/yourusername/speech-coach/releases/latest/download/SpeechCoach-linux.tar.gz" class="download-btn">
+                        Download for Linux
+                    </a>
+                    <p><small>Extract TAR.GZ → Run SpeechCoach</small></p>
+                </div>
+            </div>
+            
+            <p style="margin-top: 2rem; opacity: 0.8;">
+                <a href="https://github.com/yourusername/speech-coach/releases" style="color: white;">
+                    View all releases and release notes →
+                </a>
+            </p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎙️</div>
+                <h3>Real-time Analysis</h3>
+                <p>Live monitoring of tone, clarity, pace, and volume</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Professional Scoring</h3>
+                <p>Comprehensive metrics for communication effectiveness</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Practice Lessons</h3>
+                <p>Structured exercises for skill improvement</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>Local processing, no data sent to servers</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0; opacity: 0.8;">
+            <p>Open Source • Made with ❤️ for better communication</p>
+            <p>
+                <a href="https://github.com/yourusername/speech-coach" style="color: white;">GitHub</a> • 
+                <a href="https://github.com/yourusername/speech-coach/issues" style="color: white;">Support</a> • 
+                <a href="https://github.com/yourusername/speech-coach/discussions" style="color: white;">Community</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-detect user's OS and highlight appropriate download
+        const isWindows = navigator.platform.indexOf('Win') > -1;
+        const isLinux = navigator.platform.indexOf('Linux') > -1;
+        
+        if (isWindows) {
+            document.querySelector('.download-card:first-child').style.border = '2px solid #4CAF50';
+        } else if (isLinux) {
+            document.querySelector('.download-card:last-child').style.border = '2px solid #4CAF50';
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,21 @@
-# Speech Coach - Professional Communication Trainer
+# 🎤 Speech Coach - Professional Communication Trainer
 
-A desktop application for Linux that provides AI-powered speech analysis and training for sales professionals. Features real-time feedback, practice lessons, and detailed analytics to improve communication skills.
+<div align="center">
+  <h3>Real-time speech analysis and professional communication training</h3>
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#usage">Usage</a> •
+    <a href="#development">Development</a> •
+    <a href="#contributing">Contributing</a>
+  </p>
+</div>
+
+---
+
+## 🎯 **What is Speech Coach?**
+
+Speech Coach is a desktop application designed for sales professionals and public speakers who want to improve their communication skills through real-time speech analysis and AI-powered feedback.
 
 ## Features
 
