@@ -19,14 +19,14 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: Install Python dependencies
+    - name: Install minimal dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install PyQt6 pyaudio numpy pyinstaller requests openai
+        pip install PyQt6 pyinstaller
         
     - name: Build executable
       run: |
-        pyinstaller --onefile --windowed --name SpeechCoach main.py
+        pyinstaller --onefile --windowed --name SpeechCoach simple_main.py
         
     - name: Create release package
       run: |
@@ -43,6 +43,17 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: SpeechCoach-windows.zip
+        body: |
+          ## Speech Coach Windows Release
+          
+          **Test build** - Simple version to verify distribution system works.
+          
+          ### Installation:
+          1. Download SpeechCoach-windows.zip
+          2. Extract the ZIP file
+          3. Double-click SpeechCoach.exe
+          
+          ### File Size: ~15MB
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,19 +69,14 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y portaudio19-dev
-        
-    - name: Install Python dependencies
+    - name: Install minimal dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install PyQt6 pyaudio numpy pyinstaller requests openai
+        pip install PyQt6 pyinstaller
         
     - name: Build executable
       run: |
-        pyinstaller --onefile --name SpeechCoach main.py
+        pyinstaller --onefile --name SpeechCoach simple_main.py
         
     - name: Create release package
       run: |
@@ -88,6 +94,17 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: SpeechCoach-linux.tar.gz
+        body: |
+          ## Speech Coach Linux Release
+          
+          **Test build** - Simple version to verify distribution system works.
+          
+          ### Installation:
+          1. Download SpeechCoach-linux.tar.gz
+          2. Extract: `tar -xzf SpeechCoach-linux.tar.gz`
+          3. Run: `./SpeechCoach_Linux/SpeechCoach`
+          
+          ### File Size: ~15MB
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         pip install pyinstaller
