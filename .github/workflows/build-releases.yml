@@ -1,112 +1,101 @@
-name: Build Speech Coach Releases
+name: Build and Release
 
 on:
   push:
     tags:
-      - 'v*'  # Trigger on version tags like v1.0.0
-  workflow_dispatch:  # Allow manual trigger
+      - 'v*'
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
-    
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Speech Coach ${{ github.ref }}
+        body: |
+          ## Speech Coach Release
+          
+          **Test build** - Minimal version to verify distribution system.
+          
+          ### Downloads:
+          - Windows: Extract ZIP and run SpeechCoach.exe
+          - Linux: Extract TAR.GZ and run ./SpeechCoach
+          
+          This is a test release to establish the distribution pipeline.
+        draft: false
+        prerelease: false
+
+  build-windows:
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
         python-version: '3.11'
-        
-    - name: Install minimal dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install PyQt6 pyinstaller
-        
-    - name: Build executable
+    - name: Build
       run: |
         pyinstaller --onefile --windowed --name SpeechCoach simple_main.py
-        
-    - name: Create release package
+    - name: Package
       run: |
-        mkdir SpeechCoach_Windows
-        copy dist\\SpeechCoach.exe SpeechCoach_Windows\\
-        echo "Double-click SpeechCoach.exe to run the application" > SpeechCoach_Windows\\README.txt
-        
-    - name: Create ZIP
-      run: |
-        powershell Compress-Archive -Path SpeechCoach_Windows -DestinationPath SpeechCoach-windows.zip
-        
-    - name: Upload Release Asset
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: SpeechCoach-windows.zip
-        body: |
-          ## Speech Coach Windows Release
-          
-          **Test build** - Simple version to verify distribution system works.
-          
-          ### Installation:
-          1. Download SpeechCoach-windows.zip
-          2. Extract the ZIP file
-          3. Double-click SpeechCoach.exe
-          
-          ### File Size: ~15MB
+        mkdir package
+        copy dist\SpeechCoach.exe package\
+        echo "Double-click SpeechCoach.exe to run" > package\README.txt
+        powershell Compress-Archive -Path package\* -DestinationPath SpeechCoach-windows.zip
+    - name: Upload
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./SpeechCoach-windows.zip
+        asset_name: SpeechCoach-windows.zip
+        asset_content_type: application/zip
 
   build-linux:
+    needs: create-release
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
         python-version: '3.11'
-        
-    - name: Install minimal dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install PyQt6 pyinstaller
-        
-    - name: Build executable
+    - name: Build
       run: |
         pyinstaller --onefile --name SpeechCoach simple_main.py
-        
-    - name: Create release package
+    - name: Package
       run: |
-        mkdir SpeechCoach_Linux
-        cp dist/SpeechCoach SpeechCoach_Linux/
-        echo "Run ./SpeechCoach to start the application" > SpeechCoach_Linux/README.txt
-        chmod +x SpeechCoach_Linux/SpeechCoach
-        
-    - name: Create TAR.GZ
-      run: |
-        tar -czf SpeechCoach-linux.tar.gz SpeechCoach_Linux/
-        
-    - name: Upload Release Asset
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: SpeechCoach-linux.tar.gz
-        body: |
-          ## Speech Coach Linux Release
-          
-          **Test build** - Simple version to verify distribution system works.
-          
-          ### Installation:
-          1. Download SpeechCoach-linux.tar.gz
-          2. Extract: `tar -xzf SpeechCoach-linux.tar.gz`
-          3. Run: `./SpeechCoach_Linux/SpeechCoach`
-          
-          ### File Size: ~15MB
+        mkdir package
+        cp dist/SpeechCoach package/
+        echo "Run ./SpeechCoach to start" > package/README.txt
+        chmod +x package/SpeechCoach
+        tar -czf SpeechCoach-linux.tar.gz package/
+    - name: Upload
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./SpeechCoach-linux.tar.gz
+        asset_name: SpeechCoach-linux.tar.gz
+        asset_content_type: application/gzip
         pip install pyinstaller
         
     - name: Create icon placeholder
