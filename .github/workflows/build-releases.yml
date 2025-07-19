@@ -64,10 +64,6 @@ jobs:
           Next step: Add actual executable files.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        pip install pyinstaller
-        
-    - name: Create icon placeholder
-      run: |
         mkdir -p assets
         echo "Placeholder" > assets/speech_coach_icon.ico
         
