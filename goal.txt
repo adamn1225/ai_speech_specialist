@@ -1,0 +1,115 @@
+SPEC-1-Speech-Improvement-App
+
+Background
+
+Sales professionals often rely on clear, confident communication to close deals. However, maintaining consistent tone and clarity—especially under pressure—can be challenging. You’ve noticed that during calls your tone sometimes drifts or your articulation falters, impacting engagement and outcomes.
+
+To address this, we’ll build a desktop application for Linux that uses AI to provide both structured practice lessons and real-time feedback during live calls. By leveraging OpenAI Whisper for transcription and GPT models for tone and clarity analysis, the app will:
+
+Offer guided speaking exercises with customizable lesson plans.
+
+Provide a toggle to listen in on active calls, flagging moments of off-tone or unclear speech.
+
+Deliver post-call summaries with actionable notes to improve future performance.
+
+You already have an OpenAI API key and are open to using Python (e.g., PyQt6) or integrating with Node.js/Express where appropriate.
+
+Requirements
+
+We’ll organize the functional and non-functional requirements using MoSCoW prioritization:
+
+Must have
+
+Real‑time call analysis: Toggle to capture live audio and perform tone & clarity feedback with <500 ms latency locally; fallback to cloud for heavy processing when available (hybrid edge/cloud architecture).
+
+Offline lesson engine: Ability to run guided practice lessons fully locally without internet, including tone analysis, clarity scoring, speech rate, filler‑word detection, and volume consistency measurements.
+
+Post‑call summaries: Generate actionable notes via GPT models using call transcript data, highlighting off‑tone segments, unclear speech, excessive fillers, and rate anomalies.
+
+Customizable lesson plans: Users can select or define lesson modules focusing on specific metrics (tone, clarity, rate, fillers, volume).
+
+OpenAI key management: Secure storage and usage of user’s API key, with clear UI for connection status.
+
+Should have
+
+Detailed metrics dashboard: Visualize historical trends for all tracked metrics (e.g. line charts of speech rate over time).
+
+Multi‑model support: Ability to switch between local Whisper and cloud Whisper for transcription.
+
+Method
+
+1. Architecture Overview
+
+We’ll build a self‑contained Python application using PyQt6 for the UI and a modular audio‑processing pipeline. Core components:
+
+UI Layer (PyQt6): Main window with lesson dashboard, real‑time toggle, and metrics views.
+
+Audio Capture Module: Uses PyAudio to intercept system audio (pulseaudio integration on Linux) when toggle is enabled.
+
+Local Processing Engine:
+
+Transcription: Whisper model via whisper.cpp (C++ wrapper with Python bindings) for on‑device transcription.
+
+Analysis: Lightweight Python module computing tone (via prosody features), clarity (via articulation rate), fillers (pauses/uh/um detection), volume consistency.
+
+Scoring Service: Aggregates metrics into time‑stamped events.
+
+Cloud Fallback: When Internet is available, send audio chunks to a Python-based microservice (e.g., FastAPI) that proxies to OpenAI’s Whisper API for higher-accuracy transcription, then returns results to the local engine.
+
+Post‑Call Summarization: Local script sends full transcript and score events to OpenAI GPT endpoint for actionable notes.
+
+@startuml
+package "SpeechApp" {
+  [UI: PyQt6] --> [Audio Capture]
+  [Audio Capture] --> [Local Transcription: whisper.cpp]
+  [Local Transcription] --> [Analysis Module]
+  [Analysis Module] --> [Scoring Service]
+  [Scoring Service] --> [UI: Dashboard]
+  [Scoring Service] --> [Post-Call Summarizer]
+  [Post-Call Summarizer] --> [OpenAI GPT]
+  [Audio Capture] ..> [Express Proxy] : fallback
+  [Express Proxy] --> [OpenAI Whisper API]
+}
+@enduml
+
+2. Audio Pipeline Details
+
+Capture: Use pyaudio to open a loopback stream on PulseAudio’s monitor source (e.g., auto_null.monitor).
+
+Chunking: Buffer audio in 3‑second segments, overlapping by 0.5 s for continuity.
+
+Local Transcription: Call whisper.cpp inference at ~200 ms per chunk (quantized model).
+
+Feature Extraction:
+
+Tone: Compute pitch variance using librosa.pyin or parselmouth.
+
+Clarity: Calculate syllable count / duration for articulation rate (using praatio).
+
+Fillers: Regex match common filler words in transcript ((um+|uh+)).
+
+Volume: RMS energy sliding window.
+
+Scoring: Normalize each metric to a 0–100 scale; tag timestamps where thresholds are violated.
+
+UI Feedback: Real‑time color overlay (green/yellow/red) on UI and optional system notification.
+
+3. Lesson Engine
+
+Predefined lesson JSON files describing target metrics and scripts.
+
+Local Whisper transcription for user reading prompts.
+
+Post‑lesson report using same analysis pipeline.
+
+4. Technology Choices
+
+Python 3.11: For compatibility with whisper.cpp and audio libraries.
+
+PyQt6: Mature desktop UI toolkit for Linux.
+
+pyaudio & pulsectl: For audio capture.
+
+whisper.cpp: Efficient on-device transcription.
+
+FastAPI: Lightweight Python framework to handle cloud transcription requests, ensuring consistent language and minimal dependencies.

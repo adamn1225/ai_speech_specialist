@@ -1,0 +1,133 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# PyQt/GUI
+*.ui.autosave
+*.pro.user
+*.pro.user.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+speech_coach.log
+
+# Audio files (temporary recordings)
+temp_audio/
+*.wav
+*.mp3
+*.m4a
+*.flac
+recordings/
+
+# AI Models (these are large files)
+whisper.cpp/
+whisper.cpp/models/*.bin
+whisper.cpp/models/*.ggml
+models/
+*.model
+*.pt
+*.pth
+
+# Configuration files with sensitive data
+config.json
+.env.local
+.env.production
+.env.development
+secrets.json
+api_keys.txt
+
+# Session data and exports
+session_data/
+exports/
+data/
+*.csv
+*.xlsx
+
+# Cache
+.cache/
+__pycache__/
+.pytest_cache/
+
+# Jupyter Notebooks (if you add any)
+.ipynb_checkpoints/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Testing
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+cover/
+
+# Documentation builds
+docs/_build/
+.readthedocs.yml
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Distribution files (built automatically)
+dist/
+build/
+*.tar.gz
+*.zip
+*.exe
+*.dmg
+*.deb
+*.rpm
