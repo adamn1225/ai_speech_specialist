@@ -131,3 +131,5 @@ build/
 *.dmg
 *.deb
 *.rpm
+# Local Netlify folder
+.netlify
