@@ -28,8 +28,9 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
+        # Install core dependencies without version conflicts
+        pip install PyQt6 pyaudio numpy librosa pyinstaller requests openai praat-parselmouth
+        # Skip audioop-lts as it requires Python 3.13
         
     - name: Build Linux executable
       run: |
@@ -92,8 +93,9 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
+        # Install core dependencies without version conflicts
+        pip install PyQt6 pyaudio numpy librosa pyinstaller requests openai praat-parselmouth
+        # Skip audioop-lts as it requires Python 3.13
         
     - name: Build Windows executable
       run: |
@@ -106,23 +108,31 @@ jobs:
         copy dist\SpeechCoach.exe package\SpeechCoach_Windows\
         copy README.md package\SpeechCoach_Windows\
         
-        echo Speech Coach - Windows Installation > package\SpeechCoach_Windows\INSTALL.txt
-        echo ===================================== >> package\SpeechCoach_Windows\INSTALL.txt
-        echo. >> package\SpeechCoach_Windows\INSTALL.txt
-        echo 1. Double-click SpeechCoach.exe to run >> package\SpeechCoach_Windows\INSTALL.txt
-        echo 2. Allow microphone access when prompted >> package\SpeechCoach_Windows\INSTALL.txt
-        echo 3. Create desktop shortcut if desired >> package\SpeechCoach_Windows\INSTALL.txt
-        echo. >> package\SpeechCoach_Windows\INSTALL.txt
-        echo System Requirements: >> package\SpeechCoach_Windows\INSTALL.txt
-        echo - Windows 10/11 (64-bit) >> package\SpeechCoach_Windows\INSTALL.txt
-        echo - Audio input device (microphone) >> package\SpeechCoach_Windows\INSTALL.txt
-        echo - ~500MB free disk space >> package\SpeechCoach_Windows\INSTALL.txt
-        echo. >> package\SpeechCoach_Windows\INSTALL.txt
-        echo For issues, visit: https://github.com/adamn1225/ai_speech_specialist/issues >> package\SpeechCoach_Windows\INSTALL.txt
+        # Create installation instructions using PowerShell
+        $installText = @"
+        Speech Coach - Windows Installation
+        ===================================
         
-        echo @echo off > package\SpeechCoach_Windows\run_speech_coach.bat
-        echo echo Starting Speech Coach... >> package\SpeechCoach_Windows\run_speech_coach.bat
-        echo SpeechCoach.exe >> package\SpeechCoach_Windows\run_speech_coach.bat
+        1. Double-click SpeechCoach.exe to run
+        2. Allow microphone access when prompted
+        3. Create desktop shortcut if desired
+        
+        System Requirements:
+        - Windows 10/11 64-bit
+        - Audio input device (microphone)
+        - 500MB free disk space
+        
+        For issues, visit: https://github.com/adamn1225/ai_speech_specialist/issues
+        "@
+        $installText | Out-File -FilePath "package\SpeechCoach_Windows\INSTALL.txt" -Encoding utf8
+        
+        # Create batch launcher
+        $batchContent = @"
+        @echo off
+        echo Starting Speech Coach...
+        SpeechCoach.exe
+        "@
+        $batchContent | Out-File -FilePath "package\SpeechCoach_Windows\run_speech_coach.bat" -Encoding utf8
         
         cd package
         powershell Compress-Archive -Path SpeechCoach_Windows -DestinationPath ..\SpeechCoach-windows.zip
