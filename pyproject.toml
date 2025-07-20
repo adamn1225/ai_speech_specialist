@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speech-coach"
+version = "2.0.2"
+authors = [
+    {name = "Speech Coach Development Team", email = "support@speechcoach.dev"},
+]
+description = "Professional Communication Trainer with Real-time Speech Analysis"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Education",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Education :: Training",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Environment :: X11 Applications :: Qt",
+]
+keywords = ["speech", "analysis", "communication", "training", "ai", "voice", "coaching"]
+dependencies = [
+    "PyQt6>=6.5.0",
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+    "scikit-learn>=1.0.0",
+    "librosa>=0.8.0",
+    "soundfile>=0.10.0",
+    "PyAudio>=0.2.11",
+    "praat-parselmouth>=0.4.0",
+    "pulsectl>=22.0.0;platform_system=='Linux'",
+    "requests>=2.25.0",
+    "openai>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyinstaller>=5.0.0",
+    "pytest>=6.0.0",
+    "black>=21.0.0",
+    "isort>=5.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/adamn1225/ai_speech_specialist"
+"Bug Reports" = "https://github.com/adamn1225/ai_speech_specialist/issues"
+"Source" = "https://github.com/adamn1225/ai_speech_specialist"
+"Documentation" = "https://github.com/adamn1225/ai_speech_specialist#readme"
+
+[project.scripts]
+speech-coach = "main:main"
+
+[project.gui-scripts]
+speech-coach-gui = "main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.md", "*.txt", "*.yml", "*.yaml"]
+"assets" = ["*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"

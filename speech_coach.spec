@@ -11,6 +11,8 @@ a = Analysis(
     datas=[
         # Include any resource files that exist
         ('README.md', '.'),
+        ('VERSION', '.'),
+        ('assets/*', 'assets'),
     ],
     hiddenimports=[
         'PyQt6.QtCore',
@@ -78,5 +80,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,  # Add path to .ico file if you have an icon
+    icon='assets/speech_coach_icon.ico',  # Windows icon
+    manifest='speech_coach.manifest',  # Windows manifest for proper app behavior
+    version='version_info.txt',  # Windows version information
 )
