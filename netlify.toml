@@ -1,0 +1,36 @@
+[build]
+  # Publish directory - only deploy the website folder
+  publish = "website/"
+  
+  # No build command needed since it's just static HTML
+  command = "echo 'No build required for static site'"
+
+[build.environment]
+  # Set any environment variables if needed
+  NODE_VERSION = "18"
+
+[[redirects]]
+  # Handle any 404s by serving index.html (SPA routing)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  # Add security headers
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+[[headers]]
+  # Cache static assets
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+    
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
