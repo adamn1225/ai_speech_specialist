@@ -1,0 +1,33 @@
+# Speech Coach - Compatible Requirements
+# This file prioritizes compatibility over cutting-edge versions
+
+# UI Framework - PyQt5 for broader compatibility
+PyQt5>=5.15.0
+
+# Core Dependencies
+numpy>=1.20.0
+scipy>=1.7.0
+scikit-learn>=1.0.0
+
+# Audio Processing
+PyAudio>=0.2.11
+librosa>=0.8.0
+soundfile>=0.10.0
+praat-parselmouth>=0.4.0
+
+# Linux Audio Support
+pulsectl>=22.0.0
+
+# API and Networking
+requests>=2.25.0
+openai>=0.27.0
+
+# Additional Audio Codecs
+audioread>=2.1.0
+
+# Utilities
+packaging>=20.0
+platformdirs>=2.0.0
+
+# Optional: For building executables
+# pyinstaller>=5.0.0
