@@ -1,10 +1,18 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+from pathlib import Path
+
+# Add src directory to the path for PyInstaller
+src_path = str(Path('.').absolute() / 'src')
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
 block_cipher = None
 
 a = Analysis(
     ['main.py'],
-    pathex=[],
+    pathex=['.', 'src'],
     binaries=[
         # Include whisper binary if it exists (optional)
     ],
@@ -13,6 +21,11 @@ a = Analysis(
         ('README.md', '.'),
         ('VERSION', '.'),
         ('assets/*', 'assets'),
+        ('src/ui/*.py', 'ui'),
+        ('src/audio/*.py', 'audio'),
+        ('src/analysis/*.py', 'analysis'),
+        ('src/lessons/*.py', 'lessons'),
+        ('src/cloud/*.py', 'cloud'),
     ],
     hiddenimports=[
         'PyQt6.QtCore',
@@ -47,6 +60,10 @@ a = Analysis(
         'typing',
         'scipy',
         'scikit-learn',
+        'soundfile',
+        'soxr',
+        'numba',
+        'joblib',
     ],
     hookspath=[],
     hooksconfig={},
